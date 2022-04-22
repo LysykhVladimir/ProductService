@@ -1,8 +1,8 @@
 package com.appsdeveloperblog.estore.ProductService.command;
 
 import com.appsdeveloperblog.estore.ProductService.core.events.ProductCreatedEvent;
-import com.appsdeveloperblogs.estore.core.commands.ReserveProductCommand;
-import com.appsdeveloperblogs.estore.core.events.ProductReservedEvent;
+import com.appsdeveloperblog.estore.core.commands.ReserveProductCommand;
+import com.appsdeveloperblog.estore.core.events.ProductReservedEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;

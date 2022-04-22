@@ -3,7 +3,7 @@ package com.appsdeveloperblog.estore.ProductService.query;
 import com.appsdeveloperblog.estore.ProductService.core.data.ProductEntity;
 import com.appsdeveloperblog.estore.ProductService.core.data.ProductsRepository;
 import com.appsdeveloperblog.estore.ProductService.core.events.ProductCreatedEvent;
-import com.appsdeveloperblogs.estore.core.events.ProductReservedEvent;
+import com.appsdeveloperblog.estore.core.events.ProductReservedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
