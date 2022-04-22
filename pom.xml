@@ -61,6 +61,11 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 			<version>2.6.6</version>
 		</dependency>
+		<dependency>
+			<groupId>com.appsdeveloperblogs.estore</groupId>
+			<artifactId>core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>

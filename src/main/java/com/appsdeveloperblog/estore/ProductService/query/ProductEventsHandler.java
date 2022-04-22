@@ -3,6 +3,8 @@ package com.appsdeveloperblog.estore.ProductService.query;
 import com.appsdeveloperblog.estore.ProductService.core.data.ProductEntity;
 import com.appsdeveloperblog.estore.ProductService.core.data.ProductsRepository;
 import com.appsdeveloperblog.estore.ProductService.core.events.ProductCreatedEvent;
+import com.appsdeveloperblogs.estore.core.events.ProductReservedEvent;
+import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.messaging.interceptors.ExceptionHandler;
@@ -10,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @ProcessingGroup("product-group")
 public class ProductEventsHandler {
@@ -32,8 +35,7 @@ public class ProductEventsHandler {
     }
 
     @EventHandler
-    public void on(ProductCreatedEvent event) throws Exception {
-
+    public void on(ProductCreatedEvent event) {
         ProductEntity productEntity = new ProductEntity();
         BeanUtils.copyProperties(event, productEntity);
         try {
@@ -41,8 +43,14 @@ public class ProductEventsHandler {
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
+    }
 
-        if (true) throw new Exception("Forcing exception in the Event handler class");
-
+    @EventHandler
+    public void on(ProductReservedEvent productReservedEvent) {
+        ProductEntity productEntity = productsRepository.findByProductId(productReservedEvent.getProductId());
+        productEntity.setQuantity(productEntity.getQuantity() - productReservedEvent.getQuantity());
+        productsRepository.save(productEntity);
+        log.info("ProductReservedEvent is called for productId:{} and orderId:{}",
+                productReservedEvent.getProductId(), productReservedEvent.getOrderId());
     }
 }
