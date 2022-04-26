@@ -3,6 +3,7 @@ package com.appsdeveloperblog.estore.ProductService.query;
 import com.appsdeveloperblog.estore.ProductService.core.data.ProductEntity;
 import com.appsdeveloperblog.estore.ProductService.core.data.ProductsRepository;
 import com.appsdeveloperblog.estore.ProductService.core.events.ProductCreatedEvent;
+import com.appsdeveloperblog.estore.core.events.ProductReservationCancelledEvent;
 import com.appsdeveloperblog.estore.core.events.ProductReservedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
@@ -48,9 +49,24 @@ public class ProductEventsHandler {
     @EventHandler
     public void on(ProductReservedEvent productReservedEvent) {
         ProductEntity productEntity = productsRepository.findByProductId(productReservedEvent.getProductId());
+
+        log.info("ProductReservedEvent: Current product quantity: {}", productEntity.getQuantity());
         productEntity.setQuantity(productEntity.getQuantity() - productReservedEvent.getQuantity());
         productsRepository.save(productEntity);
+        log.info("ProductReservedEvent: New product quantity: {}", productEntity.getQuantity());
+
         log.info("ProductReservedEvent is called for productId:{} and orderId:{}",
                 productReservedEvent.getProductId(), productReservedEvent.getOrderId());
+    }
+
+    @EventHandler
+    public void on(ProductReservationCancelledEvent productReservationCancelledEvent) {
+        ProductEntity currentlyStoredProduct = productsRepository.findByProductId(productReservationCancelledEvent.getProductId());
+
+        log.info("ProductReservationCancelledEvent: Current product quantity: {}", currentlyStoredProduct.getQuantity());
+        Integer newQuantity = currentlyStoredProduct.getQuantity() + productReservationCancelledEvent.getQuantity();
+        currentlyStoredProduct.setQuantity(newQuantity);
+        productsRepository.save(currentlyStoredProduct);
+        log.info("ProductReservationCancelledEvent: New product quantity: {}", currentlyStoredProduct.getQuantity());
     }
 }
