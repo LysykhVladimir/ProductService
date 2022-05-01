@@ -8,6 +8,7 @@ import com.appsdeveloperblog.estore.core.events.ProductReservedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.eventhandling.ResetHandler;
 import org.axonframework.messaging.interceptors.ExceptionHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,5 +69,10 @@ public class ProductEventsHandler {
         currentlyStoredProduct.setQuantity(newQuantity);
         productsRepository.save(currentlyStoredProduct);
         log.info("ProductReservationCancelledEvent: New product quantity: {}", currentlyStoredProduct.getQuantity());
+    }
+
+    @ResetHandler
+    public void reset() {
+        productsRepository.deleteAll();
     }
 }
